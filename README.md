@@ -9,7 +9,7 @@ You can download this data extract from Spotify by navigating to the "Privacy" p
 ESH will take up to 30 days to download and there is a cooldown before another one can be generated once you 
 download one. You can normally do it about once a month depending on how long it takes them to prepare it.
 
-The only important piece of this extract are the files `endsong_x.json`.
+The only important piece of this extract are the files `Streaming_History_Audio_<x>.json`.
 
 ## How to run this
 There are a few things you'll need to do to get this working for yourself:
@@ -29,9 +29,12 @@ DB_NAME = "<your database name>"
 ```
 ## Database Model
 ![database_model.png](database_model.png)
+^slightly outdated - missing discovery_date in tracks, artists, and albums
 
 ## TODO
 * Clean up `charts.py` and add to repository
 * Generate playlists based on audio features
 * Generate monthly "Spotify Wrapped" that isn't :shit:
 * Finish documenting code
+* Add "album completion" detection and artificially count # of complete listens
+* Add charts.py
