@@ -3,9 +3,9 @@ Module with functions for database access capabilities.
 Contributor: Matt Gates
 """
 
-import os
 
 # Library Imports
+import os
 import pandas as pd
 import sqlalchemy
 from dotenv import load_dotenv
@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 # Static Global Variables
 load_dotenv()
 ENGINE = sqlalchemy.create_engine(
-    f"mysql+pymysql://{os.environ.get('DB_USER')}:{os.environ.get('DB_PASSWORD')}@{os.environ.get('DB_HOST')}/{os.environ.get('DB_NAME')} "
+    f"mysql+pymysql://{os.environ.get('DB_USER')}:{os.environ.get('DB_PASSWORD')}@{os.environ.get('DB_HOST')}/{os.environ.get('DB_NAME')}"
 )
 
 

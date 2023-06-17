@@ -18,7 +18,7 @@ def main():
     headers = spotify_api.authorize_spotify_api()
 
     # Folder path to Extended Streaming History json files
-    history_df = spotify_dump.load_json("raw_data/2023_04_24/endsong_*.json")
+    history_df = spotify_dump.load_json("raw_data/2023_06_09/*.json")
     spotify_dump.clean_history(history_df)
     print(
         f"Streaming history parsed and stored - [{time.time() - start_time:.2f} secs]"

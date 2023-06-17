@@ -54,6 +54,14 @@ def get_albums(headers):
     query = f"SELECT DISTINCT album_id FROM tracks"
     result = database.run_query(query)
 
+    query = """
+    SELECT album_id, MIN(discovery_date) as discovery_date
+    FROM tracks
+    GROUP BY album_id
+    """
+    discovery_date_df = database.run_query(query)
+    discovery_date_dict = discovery_date_df.set_index("album_id").T.to_dict("list")
+
     albums = []
 
     for section in range(math.ceil(len(result) / 20)):
@@ -82,6 +90,7 @@ def get_albums(headers):
                     "images": album["images"][-1]["url"],
                     "release_date": album["release_date"],
                     "release_date_precision": album["release_date_precision"],
+                    "discovery_date": discovery_date_dict[album["id"]],
                 }
             )
 
@@ -102,7 +111,7 @@ def get_albums(headers):
 
             for artist in album["artists"]:
                 new_row = pd.Series(
-                    {"album_id": new_album["album_id"], "artist": artist["id"]}
+                    {"album_id": new_album["album_id"], "artist_id": artist["id"]}
                 )
                 album_artist_df = pd.concat(
                     [album_artist_df, new_row.to_frame().T], ignore_index=True
@@ -130,6 +139,16 @@ def get_artists(headers):
     query = "SELECT DISTINCT artist_id FROM track_artists"
     result = database.run_query(query)
 
+    query = """
+    SELECT track_artists.artist_id, MIN(discovery_date)
+    FROM tracks
+    INNER JOIN track_artists
+    ON tracks.track_id=track_artists.track_id
+    GROUP BY track_artists.artist_id
+    """
+    discovery_date_df = database.run_query(query)
+    discovery_date_dict = discovery_date_df.set_index("artist_id").T.to_dict("list")
+
     artists = []
 
     for section in range(math.ceil(len(result) / 50)):
@@ -154,6 +173,7 @@ def get_artists(headers):
                     "artist_id": artist["id"],
                     "external_urls": artist["external_urls"]["spotify"],
                     "followers": artist["followers"]["total"],
+                    "discovery_date": discovery_date_dict[artist["id"]],
                 }
             )
 
@@ -189,6 +209,14 @@ def get_tracks(headers):
     query = f"SELECT DISTINCT track_id FROM clean_history"
     result = database.run_query(query)
 
+    query = """
+    SELECT track_id, MIN(stream_date) as discovery_date
+    FROM clean_history
+    GROUP BY track_id
+    """
+    discovery_date_df = database.run_query(query)
+    discovery_date_dict = discovery_date_df.set_index("track_id").T.to_dict("list")
+
     tracks = []
 
     for section in range(math.ceil(len(result) / 50)):
@@ -217,6 +245,7 @@ def get_tracks(headers):
                     "explicit": track["explicit"],
                     "external_urls": track["external_urls"]["spotify"],
                     "duration_ms": track["duration_ms"],
+                    "discovery_date": discovery_date_dict[track["id"]],
                 }
             )
 
